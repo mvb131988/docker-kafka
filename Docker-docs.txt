@@ -1,0 +1,11 @@
+docker build -t kafka -f Dockerfile-test .
+docker run -dit -p 2181:2181 kafka
+docker exec -it 79131ba7a3ae /bin/bash
+
+docker network create --subnet=172.20.0.0/16 kafka-network
+
+docker run -d -p 2181:2181 --net kafka-network --ip 172.20.0.13 kafka
+docker run -d -p 2182:2181 --net kafka-network --ip 172.20.0.14 kafka
+docker run -d -p 2183:2181 --net kafka-network --ip 172.20.0.15 kafka
+
+docker build -t kafka1 -f id1/Dockerfile-test ./id1
