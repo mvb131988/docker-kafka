@@ -1,11 +1,55 @@
-docker build -t kafka -f Dockerfile-test .
-docker run -dit -p 2181:2181 kafka
-docker exec -it 79131ba7a3ae /bin/bash
+### to test zookeper use telnet(necessary to activate it in WIndows settings)
+
+telnet localhost 2181
+srvr
+
+#################################################################################
+
+### 3 nodes would be launched, create dedicated subnet
 
 docker network create --subnet=172.20.0.0/16 kafka-network
 
-docker run -d -p 2181:2181 --net kafka-network --ip 172.20.0.13 kafka
-docker run -d -p 2182:2181 --net kafka-network --ip 172.20.0.14 kafka
-docker run -d -p 2183:2181 --net kafka-network --ip 172.20.0.15 kafka
+#################################################################################
 
-docker build -t kafka1 -f id1/Dockerfile-test ./id1
+### build 3 different images
+
+#from /id1
+docker build -t kafka1 -f Dockerfile-kafka1 .
+#from /id2
+docker build -t kafka2 -f Dockerfile-kafka2 .
+#from /id3
+docker build -t kafka3 -f Dockerfile-kafka3 .
+
+#################################################################################
+
+### run 3 different containers
+
+docker run -d -p 2181:2181 --net kafka-network --ip 172.20.0.13 kafka1
+docker run -d -p 2182:2181 --net kafka-network --ip 172.20.0.14 kafka2
+docker run -d -p 2183:2181 --net kafka-network --ip 172.20.0.15 kafka3
+
+#################################################################################
+
+### to attach to a container
+
+docker exec -it 79131ba7a3ae /bin/bash
+
+#################################################################################
+
+### logs path inside docker container
+
+/tmp/zookeeper/logs
+
+#################################################################################
+
+### Zookeeper server is deprecated. Kafka is configured in stadalone mode (note that server.properties are from /kraft
+directory, there are no zookeeper configurations any more)
+
+https://stackoverflow.com/questions/53428903/zookeeper-is-not-a-recognized-option-when-executing-kafka-console-consumer-sh
+
+./kafka-topics.sh --create --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1 --topic test
+./kafka-topics.sh --describe --bootstrap-server localhost:9092 --topic test
+./kafka-console-producer.sh --broker-list localhost:9092 --topic test
+./kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic test --from-beginning
+
+#################################################################################
