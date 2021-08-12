@@ -27,8 +27,8 @@ RUN wget https://downloads.apache.org/kafka/2.8.0/kafka_2.13-2.8.0.tgz -P /tmp/
 RUN tar -zxf /tmp/kafka_2.13-2.8.0.tgz -C /tmp/
 RUN mv /tmp/kafka_2.13-2.8.0 /tmp/kafka
 COPY kafka-config.sh /tmp/kafka
-COPY server.properties /tmp/kafka/config/kraft/
-RUN /tmp/kafka/kafka-config.sh
+COPY server.properties /tmp/kafka/config/
+#RUN /tmp/kafka/kafka-config.sh
 
 COPY app-entrypoint.sh /tmp/
 ENTRYPOINT ["/tmp/app-entrypoint.sh"]
