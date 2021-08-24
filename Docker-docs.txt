@@ -53,3 +53,10 @@ https://stackoverflow.com/questions/53428903/zookeeper-is-not-a-recognized-optio
 ./kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic test --from-beginning
 
 #################################################################################
+
+docker build -t traderplacer -f Dockerfile .
+docker run -d --net kafka-network --ip 172.20.0.17 traderplacer
+
+docker run -d -p 8080:8080 -p 8443:8443 -p 8787:8787 --net kafka-network --ip 172.20.0.17 traderplacer
+
+./standalone.sh --debug 8787 -b 0.0.0.0 
