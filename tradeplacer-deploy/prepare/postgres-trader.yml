@@ -1,0 +1,23 @@
+version: '3'
+
+services:
+  postgres-tradeplacer:
+    container_name: postgres-tradeplacer
+    image: 'postgres:10.10-alpine'
+    environment:
+      POSTGRES_USER: 'postgres'
+      POSTGRES_PASSWORD: 'postgres'
+      POSTGRES_DB: 'trader'
+    volumes:
+      - 'postgres-tradeplacer:/var/lib/postgresql/data'
+    ports:
+      - '5432:5432'
+    networks:
+      tradeplacer-network:
+        ipv4_address: 172.13.0.16
+volumes:
+  postgres-tradeplacer:
+networks:
+  tradeplacer-network:
+     external: true
+     driver: bridge
