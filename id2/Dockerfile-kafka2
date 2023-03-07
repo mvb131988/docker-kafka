@@ -1,5 +1,8 @@
 FROM ubuntu:21.10
 
+RUN apt-get update \
+  && apt-get install htop vim -y
+
 RUN cd /tmp && mkdir java
 RUN  apt-get update \
   && apt-get install -y wget \
